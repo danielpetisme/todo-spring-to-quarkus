@@ -1,0 +1,64 @@
+{
+  "realm" : "todo-app",
+  "users" : [ {
+    "id" : "6c7629c0-f463-45a8-b21d-5b620b4f03a6",
+    "createdTimestamp" : 1571576832045,
+    "username" : "admin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Admin",
+    "lastName" : "Administraor",
+    "email" : "admin@todo-app.local",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "j0A8zD41Jo3Ic2vaI8rjFhCWKeT+0pSf7GcptDFy40wJXjOsZ8JH/sFKORJj5WSFDOO3vXlAPahIvZNTX/vqfg==",
+      "salt" : "yOthC3qlE/RgdP86SxVuZQ==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1571577011042,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Admin" ]
+  }, {
+    "id" : "2a07ceb4-06b2-40a9-b238-be7cd078380f",
+    "createdTimestamp" : 1571576932217,
+    "username" : "user",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "User",
+    "lastName" : "User",
+    "email" : "user@todo-app.local",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "q3Hha86dSiXSXrk4SHRrQCKGeYUdxw6LXZ5ZXaBq55IHSDHTJkbteGYGOYD+Jul60u2FUuFccgO6sTUdWq2W4w==",
+      "salt" : "vc2yplAJyBftAQ9+KlNmjg==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1571577042187,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Users" ]
+  } ]
+}

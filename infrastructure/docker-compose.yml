@@ -1,0 +1,39 @@
+version: "3"
+services:
+    postgres:
+        image: "postgres:10.5"
+        ports:
+            - "5432:5432"
+# tag::adocVolumePostgres[]
+        volumes:
+            - ./db-init/initialize-databases.sql:/docker-entrypoint-initdb.d/init.sql
+# end::adocVolumePostgres[]
+    keycloak:
+        image: 'jboss/keycloak:7.0.0'
+        command:
+          [
+              '-b',
+              '0.0.0.0',
+              '-Dkeycloak.migration.action=import',
+              '-Dkeycloak.migration.provider=dir',
+              '-Dkeycloak.migration.dir=/opt/jboss/keycloak/realm-config',
+              '-Dkeycloak.migration.strategy=OVERWRITE_EXISTING',
+              '-Djboss.socket.binding.port-offset=1000',
+          ]
+        ports:
+          - 9080:9080
+          - 9443:9443
+          - 10990:10990
+# tag::adocVolumeKeycloack[]
+        volumes:
+            - ./realm-config:/opt/jboss/keycloak/realm-config
+# end::adocVolumeKeycloack[]
+        environment:
+            KEYCLOAK_USER: admin
+            KEYCLOAK_PASSWORD: admin
+            DB_VENDOR: postgres
+
+            DB_USER: keycloak
+            DB_PASSWORD: keycloak
+        depends_on:
+            - postgres

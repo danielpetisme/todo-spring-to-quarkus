@@ -2,11 +2,11 @@ package io.spring.sample;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
@@ -30,6 +30,7 @@ public class TodoResource {
 
   @GetMapping
   @ResponseBody
+  @RolesAllowed({"ROLE_USER"})
   public List<Todo> getAll() {
     return todoRepository.findAll(Sort.by("order"));
   }
