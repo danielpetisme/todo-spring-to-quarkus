@@ -28,4 +28,12 @@
         }
     };
 
+    exports.accountStorage = {
+      getAccount: async function() {
+          const response = await axios.get(serverUrl + "me");
+          console.log("Me: " + response.data);
+          return response.data;
+      }
+    }
+
 })(window);

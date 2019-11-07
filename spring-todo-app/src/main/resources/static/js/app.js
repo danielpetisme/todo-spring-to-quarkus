@@ -30,7 +30,8 @@
             todos: [],
             newTodo: '',
             editedTodo: null,
-            visibility: 'all'
+            visibility: 'all',
+            account: null
         },
 
         computed: {
@@ -114,6 +115,8 @@
             reload: async function () {
                 const data = await todoStorage.fetch();
                 app.todos = data;
+                const account = await accountStorage.getAccount();
+                app.account = account;
             }
         },
 

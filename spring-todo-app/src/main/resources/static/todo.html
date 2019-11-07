@@ -5,7 +5,14 @@
     <title>Vue.js • TodoMVC</title>
     <link rel="stylesheet" href="node_modules/todomvc-common/base.css">
     <link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
-    <style> [v-cloak] { display: none; } </style>
+    <style>
+        [v-cloak] { display: none; }
+        .todoapp h2 {
+            position: absolute;
+            bottom: -80px;
+            right: 10px;
+        }
+    </style>
 </head>
 <body>
 <section class="todoapp" v-cloak>
@@ -39,6 +46,7 @@
         <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
             Clear completed
         </button>
+        <h2>Connected as {{account}}</h2>
     </footer>
 </section>
 <script src="node_modules/todomvc-common/base.js"></script>
