@@ -1,4 +1,4 @@
-package io.spring.sample;
+package io.sample.todoapp;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;

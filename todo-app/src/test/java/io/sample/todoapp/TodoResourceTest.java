@@ -1,4 +1,4 @@
-package io.spring.sample;
+package io.sample.todoapp;
 
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.PortBinding;
@@ -35,9 +35,9 @@ public class TodoResourceTest {
 
   @Container
   public static final PostgreSQLContainer DATABASE = new PostgreSQLContainer<>()
-    .withDatabaseName("rest-crud")
-    .withUsername("restcrud")
-    .withPassword("restcrud")
+    .withDatabaseName("todo")
+    .withUsername("todo")
+    .withPassword("todo")
     .withExposedPorts(5432)
     .withCreateContainerCmdModifier(cmd ->
       cmd
