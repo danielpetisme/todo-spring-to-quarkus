@@ -1,4 +1,4 @@
-package io.spring.sample;
+package io.sample.todoapp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
