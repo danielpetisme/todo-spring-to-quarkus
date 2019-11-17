@@ -1,12 +1,13 @@
 package io.sample.todoapp;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 import static io.restassured.RestAssured.*;
@@ -19,15 +20,18 @@ public class TodoResourceTest {
     @Test
     @Order(1)
     void testInitialItems() {
-        List<Todo> todos = get("/api").then()
+        List<Todo> todos =
+            given().auth().preemptive().basic("admin", "admin")
+            .get("/api").then()
             .statusCode(HttpStatus.SC_OK)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .extract().body().as(getTodoTypeRef());
         Assertions.assertEquals(4, todos.size());
 
-        get("/api/1").then()
+        given().auth().preemptive().basic("admin", "admin")
+            .get("/api/1").then()
             .statusCode(HttpStatus.SC_OK)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .body("title", is("Introduction to Quarkus"))
             .body("completed", is(true));
     }
@@ -38,21 +42,23 @@ public class TodoResourceTest {
         Todo todo = new Todo();
         todo.setTitle("testing the application");
         given()
+            .auth().preemptive().basic("admin", "admin")
             .body(todo)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .when()
             .post("/api")
             .then()
             .statusCode(HttpStatus.SC_CREATED)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .body("title", is(todo.getTitle()))
             .body("completed", is(false))
             .body("id", is(5));
 
-        List<Todo> todos = get("/api").then()
+        List<Todo> todos = given().auth().preemptive().basic("admin", "admin")
+            .get("/api").then()
             .statusCode(HttpStatus.SC_OK)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .extract().body().as(getTodoTypeRef());
         Assertions.assertEquals(5, todos.size());
 
@@ -65,14 +71,15 @@ public class TodoResourceTest {
         todo.setTitle("testing the application (updated)");
         todo.setCompleted(true);
         given()
+            .auth().preemptive().basic("admin", "admin")
             .body(todo)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .when()
             .patch("/api/{id}", 5)
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .body("title", is(todo.getTitle()))
             .body("completed", is(true))
             .body("id", is(5));
@@ -82,16 +89,18 @@ public class TodoResourceTest {
     @Order(4)
     void testDeletingAnItem() {
         given()
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+            .auth().preemptive().basic("admin", "admin")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
             .when()
             .delete("/api/{id}", 5)
             .then()
             .statusCode(HttpStatus.SC_NO_CONTENT);
 
-        List<Todo> todos = get("/api").then()
+        List<Todo> todos = given().auth().preemptive().basic("admin", "admin")
+            .get("/api").then()
             .statusCode(HttpStatus.SC_OK)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .extract().body().as(getTodoTypeRef());
         Assertions.assertEquals(4, todos.size());
     }
@@ -99,13 +108,15 @@ public class TodoResourceTest {
     @Test
     @Order(5)
     void testDeleteCompleted() {
-        delete("/api")
+        given().auth().preemptive().basic("admin", "admin")
+            .delete("/api")
             .then()
             .statusCode(HttpStatus.SC_NO_CONTENT);
 
-        List<Todo> todos = get("/api").then()
+        List<Todo> todos = given().auth().preemptive().basic("admin", "admin")
+            .get("/api").then()
             .statusCode(HttpStatus.SC_OK)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .extract().body().as(getTodoTypeRef());
         Assertions.assertEquals(3, todos.size());
     }
