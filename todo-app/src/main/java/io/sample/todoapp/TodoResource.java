@@ -1,5 +1,6 @@
 package io.sample.todoapp;
 
+import io.quarkus.security.Authenticated;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.springframework.data.domain.Sort;
 
@@ -17,14 +18,11 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 @Path(value = "/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Authenticated
 public class TodoResource {
 
-    private final TodoRepository todoRepository;
-
     @Inject
-    public TodoResource(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
-    }
+    TodoRepository todoRepository;
 
     @OPTIONS
     public Response opt() {
@@ -32,7 +30,7 @@ public class TodoResource {
     }
 
     @GET
-    @RolesAllowed({ "ROLE_USER" })
+    @RolesAllowed("ROLE_USER")
     public List<Todo> getAll() {
         return todoRepository.findAll(Sort.by("order"));
     }
