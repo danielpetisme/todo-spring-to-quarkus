@@ -1,21 +1,25 @@
 package io.sample.todoapp;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import io.quarkus.security.Authenticated;
+import io.quarkus.security.identity.SecurityIdentity;
 
 import javax.annotation.security.RolesAllowed;
-import java.security.Principal;
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-@RestController
-@RequestMapping(value = "/api/me")
+@Path("/api/me")
+@Authenticated
 public class AccountResource {
 
-    @GetMapping
-    @ResponseBody
-    @RolesAllowed({"ROLE_USER"})
-    public String me(Principal principal) {
-        return principal.getName();
+    @Inject SecurityIdentity identity;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @RolesAllowed("ROLE_USER")
+    public String me() {
+        return identity.getPrincipal().getName();
     }
 }
