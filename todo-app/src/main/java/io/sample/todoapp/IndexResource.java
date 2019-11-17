@@ -13,10 +13,10 @@ import java.net.URI;
 @RequestMapping("/")
 public class IndexResource {
 
-  @GetMapping
-  public ResponseEntity redirect() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setLocation(URI.create("todo.html"));
-    return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
-  }
+    @GetMapping
+    public ResponseEntity redirect() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("todo.html"));
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+    }
 }

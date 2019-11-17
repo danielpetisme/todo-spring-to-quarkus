@@ -6,69 +6,69 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class Todo {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  @NotBlank
-  @Column(unique = true)
-  private String title;
+    @NotBlank
+    @Column(unique = true)
+    private String title;
 
-  private boolean completed;
+    private boolean completed;
 
-  @Column(name = "ordering")
-  private int order;
+    @Column(name = "ordering")
+    private int order;
 
-  private String url;
+    private String url;
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public boolean isCompleted() {
-    return completed;
-  }
+    public boolean isCompleted() {
+        return completed;
+    }
 
-  public void setCompleted(boolean completed) {
-    this.completed = completed;
-  }
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
-  public int getOrder() {
-    return order;
-  }
+    public int getOrder() {
+        return order;
+    }
 
-  public void setOrder(int order) {
-    this.order = order;
-  }
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
-  public String getUrl() {
-    return url;
-  }
+    public String getUrl() {
+        return url;
+    }
 
-  public void setUrl(String url) {
-    this.url = url;
-  }
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-  @Override
-  public String toString() {
-    return "Todo{" +
-      "id=" + id +
-      ", title='" + title + '\'' +
-      ", completed=" + completed +
-      ", order=" + order +
-      ", url='" + url + '\'' +
-      '}';
-  }
+    @Override
+    public String toString() {
+        return "Todo{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", completed=" + completed +
+            ", order=" + order +
+            ", url='" + url + '\'' +
+            '}';
+    }
 }
