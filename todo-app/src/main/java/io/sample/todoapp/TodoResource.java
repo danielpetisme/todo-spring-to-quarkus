@@ -2,6 +2,8 @@ package io.sample.todoapp;
 
 import io.quarkus.panache.common.Sort;
 import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Metered;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.annotation.security.RolesAllowed;
@@ -43,6 +45,7 @@ public class TodoResource {
 
     @POST
     @Transactional
+    @Counted
     public Response create(@Valid Todo todo) {
         todo.persist();
         return Response.status(Response.Status.CREATED).entity(todo).build();
@@ -51,6 +54,7 @@ public class TodoResource {
     @PATCH
     @Path("/{id}")
     @Transactional
+    @Metered
     public Todo update(@Valid Todo todo, @PathParam Long id) {
         Todo entity = Todo.findById(id);
         if (entity == null) {
