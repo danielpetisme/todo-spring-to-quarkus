@@ -1,81 +1,87 @@
 package io.sample.todoapp;
 
+import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/api")
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
+
+@Path(value = "/api")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class TodoResource {
 
-  private final TodoRepository todoRepository;
+    private final TodoRepository todoRepository;
 
-  public TodoResource(TodoRepository todoRepository) {
-    this.todoRepository = todoRepository;
-  }
+    @Inject
+    public TodoResource(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
 
-  @RequestMapping(method=RequestMethod.OPTIONS)
-  public ResponseEntity opt() {
-    return ResponseEntity.ok().build();
-  }
+    @OPTIONS
+    public Response opt() {
+        return Response.ok().build();
+    }
 
-  @GetMapping
-  @ResponseBody
-  @RolesAllowed({"ROLE_USER"})
-  public List<Todo> getAll() {
-    return todoRepository.findAll(Sort.by("order"));
-  }
+    @GET
+    @RolesAllowed({ "ROLE_USER" })
+    public List<Todo> getAll() {
+        return todoRepository.findAll(Sort.by("order"));
+    }
 
-  @GetMapping("/{id}")
-  @ResponseBody
-  public Todo getOne(@PathVariable Long id) {
-    return todoRepository.findById(id)
-      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo with id of " + id + " does not exist."));
-  }
+    @GET
+    @Path("/{id}")
+    public Todo getOne(@PathParam Long id) {
+        return todoRepository.findById(id)
+            .orElseThrow(
+                () -> new WebApplicationException("Todo with id of " + id + " does not exist.", NOT_FOUND));
+    }
 
-  @PostMapping
-  @Transactional
-  public ResponseEntity<Todo> create(@Valid @RequestBody Todo todo) throws URISyntaxException {
-    Todo result = todoRepository.save(todo);
-    return ResponseEntity.created(new URI("/api/" + result.getId())).body(result);
-  }
+    @POST
+    @Transactional
+    public Response create(@Valid Todo todo) {
+        Todo result = todoRepository.save(todo);
+        return Response.status(Response.Status.CREATED).entity(result).build();
+    }
 
-  @PatchMapping("/{id}")
-  @Transactional
-  public ResponseEntity<Todo> update(@Valid @RequestBody Todo todo, @PathVariable("id") Long id) {
-    Todo entity = todoRepository.findById(id)
-      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo with id of " + id + " does not exist."));
-      entity.setId(id);
-      entity.setCompleted(todo.isCompleted());
-      entity.setOrder(todo.getOrder());
-      entity.setTitle(todo.getTitle());
-      entity.setUrl(todo.getUrl());
-      Todo result = todoRepository.save(entity);
-      return ResponseEntity.ok(result);
-  }
+    @PATCH
+    @Path("/{id}")
+    @Transactional
+    public Todo update(@Valid Todo todo, @PathParam Long id) {
+        Todo entity = todoRepository.findById(id)
+            .orElseThrow(
+                () -> new WebApplicationException("Todo with id of " + id + " does not exist.", NOT_FOUND));
+        entity.setId(id);
+        entity.setCompleted(todo.isCompleted());
+        entity.setOrder(todo.getOrder());
+        entity.setTitle(todo.getTitle());
+        entity.setUrl(todo.getUrl());
+        return todoRepository.save(entity);
+    }
 
-  @DeleteMapping
-  @Transactional
-  public ResponseEntity<Void> deleteCompleted() {
-    todoRepository.deleteCompleted();
-    return ResponseEntity.noContent().build();
-  }
+    @DELETE
+    @Transactional
+    public Response deleteCompleted() {
+        todoRepository.deleteCompleted();
+        return Response.noContent().build();
+    }
 
-  @DeleteMapping("/{id}")
-  @Transactional
-  public ResponseEntity<Void> deleteOne(@PathVariable("id") Long id) {
-    Todo entity = todoRepository.findById(id)
-      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo with id of " + id + " does not exist."));
-    todoRepository.delete(entity);
-    return ResponseEntity.noContent().build();
-  }
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response deleteOne(@PathParam Long id) {
+        Todo entity = todoRepository.findById(id)
+            .orElseThrow(
+                () -> new WebApplicationException("Todo with id of " + id + " does not exist.", NOT_FOUND));
+        todoRepository.delete(entity);
+        return Response.noContent().build();
+    }
 }
