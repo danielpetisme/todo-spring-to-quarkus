@@ -1,74 +1,43 @@
 package io.sample.todoapp;
 
-import javax.persistence.*;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 @Entity
-public class Todo {
+public class Todo extends PanacheEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+    @NotBlank
+    @Column(unique = true)
+    public String title;
 
-  @NotBlank
-  @Column(unique = true)
-  private String title;
+    public boolean completed;
 
-  private boolean completed;
+    @Column(name = "ordering")
+    public int order;
 
-  @Column(name = "ordering")
-  private int order;
+    public String url;
 
-  private String url;
+    public static void deleteCompleted() {
+        delete("completed", true);
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public static Optional<Todo> find(Long id) {
+        Todo todo = findById(id);
+        return Optional.ofNullable(todo);
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public boolean isCompleted() {
-    return completed;
-  }
-
-  public void setCompleted(boolean completed) {
-    this.completed = completed;
-  }
-
-  public int getOrder() {
-    return order;
-  }
-
-  public void setOrder(int order) {
-    this.order = order;
-  }
-
-  public String getUrl() {
-    return url;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
-  @Override
-  public String toString() {
-    return "Todo{" +
-      "id=" + id +
-      ", title='" + title + '\'' +
-      ", completed=" + completed +
-      ", order=" + order +
-      ", url='" + url + '\'' +
-      '}';
-  }
+    @Override
+    public String toString() {
+        return "Todo{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", completed=" + completed +
+            ", order=" + order +
+            ", url='" + url + '\'' +
+            '}';
+    }
 }

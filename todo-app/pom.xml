@@ -46,7 +46,7 @@
 
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-spring-data-jpa</artifactId>
+            <artifactId>quarkus-hibernate-orm-panache</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>

@@ -1,7 +1,6 @@
 package io.sample.todoapp;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.*;
@@ -10,7 +9,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
@@ -22,10 +21,10 @@ public class TodoResourceTest {
     void testInitialItems() {
         List<Todo> todos =
             given().auth().preemptive().basic("admin", "admin")
-            .get("/api").then()
-            .statusCode(HttpStatus.SC_OK)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .extract().body().as(getTodoTypeRef());
+                .get("/api").then()
+                .statusCode(HttpStatus.SC_OK)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .extract().body().as(getTodoTypeRef());
         Assertions.assertEquals(4, todos.size());
 
         given().auth().preemptive().basic("admin", "admin")
@@ -40,7 +39,7 @@ public class TodoResourceTest {
     @Order(2)
     void testAddingAnItem() {
         Todo todo = new Todo();
-        todo.setTitle("testing the application");
+        todo.title = "testing the application";
         given()
             .auth().preemptive().basic("admin", "admin")
             .body(todo)
@@ -51,7 +50,7 @@ public class TodoResourceTest {
             .then()
             .statusCode(HttpStatus.SC_CREATED)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .body("title", is(todo.getTitle()))
+            .body("title", is(todo.title))
             .body("completed", is(false))
             .body("id", is(5));
 
@@ -68,8 +67,8 @@ public class TodoResourceTest {
     @Order(3)
     void testUpdatingAnItem() {
         Todo todo = new Todo();
-        todo.setTitle("testing the application (updated)");
-        todo.setCompleted(true);
+        todo.title ="testing the application (updated)";
+        todo.completed = true;
         given()
             .auth().preemptive().basic("admin", "admin")
             .body(todo)
@@ -80,7 +79,7 @@ public class TodoResourceTest {
             .then()
             .statusCode(HttpStatus.SC_OK)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-            .body("title", is(todo.getTitle()))
+            .body("title", is(todo.title))
             .body("completed", is(true))
             .body("id", is(5));
     }
