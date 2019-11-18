@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
+@RolesAllowed({ "ROLE_USER" })
 public class TodoResource {
 
     private final TodoRepository todoRepository;
@@ -30,7 +31,6 @@ public class TodoResource {
 
     @GetMapping
     @ResponseBody
-    @RolesAllowed({ "ROLE_USER" })
     public List<Todo> getAll() {
         return todoRepository.findAll(Sort.by("order"));
     }
@@ -67,6 +67,7 @@ public class TodoResource {
 
     @DeleteMapping
     @Transactional
+    @RolesAllowed({ "ROLE_ADMIN" })
     public ResponseEntity<Void> deleteCompleted() {
         todoRepository.deleteCompleted();
         return ResponseEntity.noContent().build();
