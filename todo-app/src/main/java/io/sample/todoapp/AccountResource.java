@@ -14,7 +14,7 @@ public class AccountResource {
 
     @GetMapping
     @ResponseBody
-    @RolesAllowed({"ROLE_USER"})
+    @RolesAllowed({ "ROLE_USER" })
     public String me(Principal principal) {
         return principal.getName();
     }

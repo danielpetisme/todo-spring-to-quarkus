@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-  @Modifying
-  @Query("delete from Todo t where t.completed=true")
-  @Transactional
-  void deleteCompleted();
+    @Modifying
+    @Query("delete from Todo t where t.completed=true")
+    @Transactional
+    void deleteCompleted();
 
 }
