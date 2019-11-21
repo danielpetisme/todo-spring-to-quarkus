@@ -70,6 +70,7 @@ public class TodoResource {
 
     @DELETE
     @Transactional
+    @RolesAllowed("ROLE_ADMIN")
     public Response deleteCompleted() {
         Todo.deleteCompleted();
         return Response.noContent().build();
