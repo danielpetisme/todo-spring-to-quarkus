@@ -18,12 +18,7 @@ public class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf()
-            .disable()
-            .authorizeRequests()
-            .anyRequest().permitAll();
-//            .authorizeRequests().anyRequest().authenticated();
-//            .antMatchers("/api**").hasAuthority("ROLE_USER");
-//            .authorizeRequests().anyRequest().hasAnyRole("USER", "ADMIN");
+            .disable();
     }
 
 }

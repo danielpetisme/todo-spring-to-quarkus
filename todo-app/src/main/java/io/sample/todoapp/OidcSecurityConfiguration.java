@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
-@Profile("foo")
+@Profile("default")
 public class OidcSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override

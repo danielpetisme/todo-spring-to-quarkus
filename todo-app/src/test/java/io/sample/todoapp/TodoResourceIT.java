@@ -14,12 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.Validator;
+import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -31,15 +30,15 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.get;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
-
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 
 @Testcontainers
 @SpringBootTest(classes = {TodoApplication.class, TestSecurityConfiguration.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles("test")
-public class TodoResourceTest {
+@ActiveProfiles({"test"})
+@TestPropertySource(properties = "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration")
+public class TodoResourceIT {
 
     @Container
     public static final PostgreSQLContainer DATABASE = new PostgreSQLContainer<>()
@@ -54,25 +53,15 @@ public class TodoResourceTest {
         );
 
     @Autowired
-    private TodoRepository todoRepository;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private Validator validator;
-
-    @Autowired
-    FilterChainProxy springSecurityFilterChain;
+    private WebApplicationContext context;
 
     @BeforeEach
     public void setup() {
         RestAssuredMockMvc.standaloneSetup(
-            MockMvcBuilders.standaloneSetup(new TodoResource(todoRepository))
-                .apply(springSecurity(springSecurityFilterChain))
-                .setMessageConverters(jacksonMessageConverter)
-                .setValidator(validator)
+            MockMvcBuilders.webAppContextSetup(context)
+                .apply(springSecurity())
         );
+
         RestAssured.requestSpecification = new RequestSpecBuilder()
             .setContentType(ContentType.JSON)
             .setAccept(ContentType.JSON)
@@ -171,7 +160,7 @@ public class TodoResourceTest {
 
     @Test
     @Order(5)
-    @WithMockUser(authorities = {"ROLE_ADMIN"})
+    @WithMockUser(authorities = {"ROLE_USER", "ROLE_ADMIN"})
     void testDeleteCompleted() {
         given()
             .when()
